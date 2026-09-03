@@ -424,7 +424,7 @@ jobs:
               if [ "${{ inputs.enable_susfs }}" = "false" ]; then
                 BRANCH="-s main"
               else
-                BRANCH="-s builtin"
+                BRANCH="-s main"
               fi
               ;;
             "Next")
