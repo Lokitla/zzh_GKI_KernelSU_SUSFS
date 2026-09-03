@@ -80,6 +80,11 @@ on:
         required: false
         type: boolean
         default: false
+      sukisu_branch:
+        description: "SukiSU 变体使用的主分支（默认 main，完整版；builtin 有 feature_set bug）"
+        required: false
+        type: string
+        default: "main"
 
 jobs:
   build-kernel:
@@ -421,11 +426,8 @@ jobs:
               BRANCH="-s main"
               ;;
             "SukiSU")
-              if [ "${{ inputs.enable_susfs }}" = "false" ]; then
-                BRANCH="-s main"
-              else
-                BRANCH="-s main"
-              fi
+              # 分支由 sukisu_branch 输入决定（默认 main 完整版；builtin 缺 feature_set 有 bug）
+              BRANCH="-s ${{ inputs.sukisu_branch }}"
               ;;
             "Next")
               BRANCH=""

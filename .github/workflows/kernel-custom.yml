@@ -115,6 +115,20 @@ on:
         required: false
         type: boolean
         default: false
+      sukisu_branch:
+        description: "SukiSU 变体使用的主分支（默认 main 完整版；builtin 缺 feature_set 有 bug）"
+        required: false
+        type: choice
+        default: "main"
+        options:
+          - "main"
+          - "dev"
+          - "builtin"
+      get_spoofed:
+        description: "额外拉取 Spoofed（伪装包名）管理器"
+        required: false
+        type: boolean
+        default: false
 
 jobs:
   resolve-version:
@@ -215,9 +229,11 @@ jobs:
       droidspaces: ${{ inputs.droidspaces || 'off' }}
       droidspaces_ntsync: ${{ inputs.droidspaces_ntsync || false }}
       artifact_upload_mode: ${{ inputs.artifact_upload_mode }}
+      sukisu_branch: ${{ inputs.sukisu_branch || 'main' }}
 
   get-ksu-manager:
     uses: ./.github/workflows/get-manager.yml
     secrets: inherit
     with:
       kernelsu_variant: ${{ inputs.kernelsu_variant }}
+      get_spoofed: ${{ inputs.get_spoofed || false }}

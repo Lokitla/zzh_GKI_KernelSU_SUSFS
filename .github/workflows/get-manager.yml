@@ -9,6 +9,11 @@ on:
       kernelsu_variant:
         required: true
         type: string
+      get_spoofed:
+        description: "是否额外拉取 Spoofed（伪装包名）管理器"
+        required: false
+        type: boolean
+        default: false
     outputs:
       susVer:
         description: "The fetched SUSFS version number"
@@ -206,6 +211,10 @@ jobs:
             elif [ "${{ inputs.kernelsu_variant }}" == "ReSukiSU" ]; then
               printf '%s' "$artifacts" | jq -r \
                 '.artifacts[] | select(.name == "Manager-release" or .name == "Spoofed-Manager-release") | "\(.name)\t\(.archive_download_url)"'
+            elif [ "${{ inputs.get_spoofed }}" == "true" ]; then
+              # get_spoofed：额外匹配 Spoofed（伪装包名）管理器
+              printf '%s' "$artifacts" | jq -r --arg needle "$KSUM" \
+                '.artifacts[] | select((.name | ascii_downcase) | contains($needle) or contains("spoofed")) | "\(.name)\t\(.archive_download_url)"'
             else
               printf '%s' "$artifacts" | jq -r --arg needle "$KSUM" \
                 '.artifacts[] | select((.name | ascii_downcase) | contains($needle)) | "\(.name)\t\(.archive_download_url)"'
